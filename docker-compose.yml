@@ -1,0 +1,27 @@
+version: '3.4'
+
+services:
+  php:
+    container_name: 'cmon-php_fpm'
+    network_mode: bridge
+    build:
+      context: $PWD/.docker/php
+    volumes:
+      - $PWD/.docker/php/php:/usr/local/etc/php:ro,cached
+      - $PWD:/app:rw,cached
+      - ./var:/app/var:rw,delegated
+    expose:
+      - 9000
+    user: '1000'
+
+  nginx:
+    container_name: 'cmon.docker'
+    network_mode: bridge
+    build: .docker/nginx
+    ports:
+      - 80:80
+    volumes:
+      - ./public:/app/public:ro,cached
+      - ./.docker/nginx/etc/nginx:/etc/nginx:ro,cached
+    links:
+      - php

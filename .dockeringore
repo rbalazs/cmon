@@ -1,0 +1,4 @@
+.dockeringore
+.git
+.docker
+docker-compose.yml
