@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello StatController!{% endblock %}
+
+{% block body %}
+
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <div id="cnt"></div>
+
+    <script>
+        var stat = {{ stat|json_encode|raw }};
+
+        // set the dimensions and margins of the graph
+        var margin = {top: 30, right: 30, bottom: 70, left: 60},
+            width = 460 - margin.left - margin.right,
+            height = 400 - margin.top - margin.bottom;
+
+        var svg = d3.select("#cnt")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        stat.forEach(function (data) {
+            var x = d3.scaleBand()
+                .range([0, width])
+                .domain(stat.map(function (d) {
+                    return d.user;
+                }))
+                .padding(0.2);
+
+            svg.append("g")
+                .attr("transform", "translate(0," + height + ")")
+                .call(d3.axisBottom(x))
+                .selectAll("text")
+                .attr("transform", "translate(-10,0)rotate(-45)")
+                .style("text-anchor", "end");
+
+            var y = d3.scaleLinear()
+                .range([height, 0])
+                .domain([0, d3.max(stat, function (d) {
+                    return d.q;
+                }) * 1.1]);
+
+            svg.append("g").call(d3.axisLeft(y));
+
+            svg.selectAll("mybar")
+                .data(stat)
+                .enter()
+                .append("rect")
+                .attr("x", function (d) {
+                    return x(d.user);
+                })
+                .attr("y", function (d) {
+                    return y(d.q);
+                })
+                .attr("width", x.bandwidth())
+                .attr("height", function (d) {
+                    return height - y(d.q);
+                })
+                .attr("fill", "#69b3a2")
+        })
+
+    </script>
+
+{% endblock %}

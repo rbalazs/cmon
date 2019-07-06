@@ -3,6 +3,7 @@ version: '3.4'
 services:
   php:
     container_name: 'cmon-php_fpm'
+    working_dir: /app
     network_mode: bridge
     build:
       context: $PWD/.docker/php
@@ -10,6 +11,7 @@ services:
       - $PWD/.docker/php/etc/php:/usr/local/etc/php:ro,cached
       - $PWD:/app:rw,cached
       - ./var:/app/var:rw,delegated
+      - /tmp/.composer/cache:/var/www/.composer/cache
     expose:
       - 9000
     user: '1000'
