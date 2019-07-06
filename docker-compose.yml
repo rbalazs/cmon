@@ -7,7 +7,7 @@ services:
     build:
       context: $PWD/.docker/php
     volumes:
-      - $PWD/.docker/php/php:/usr/local/etc/php:ro,cached
+      - $PWD/.docker/php/etc/php:/usr/local/etc/php:ro,cached
       - $PWD:/app:rw,cached
       - ./var:/app/var:rw,delegated
     expose:

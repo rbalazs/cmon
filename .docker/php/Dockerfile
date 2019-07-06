@@ -5,6 +5,10 @@ RUN apt-get update && \
 
 RUN docker-php-ext-install zip
 
+RUN docker-php-ext-install pdo pdo_mysql
+
+RUN pecl install xdebug && docker-php-ext-enable xdebug
+
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
 
 RUN usermod -u 1000 www-data
